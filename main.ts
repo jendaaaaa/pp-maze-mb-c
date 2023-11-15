@@ -3,13 +3,12 @@
 // radio to MB-B
 
 // PINOUT
-let PIN_NEOPIXEL = DigitalPin.P0;
+let PIN_NEOPIXEL = DigitalPin.P1;
 
 // INIT
 radio.setGroup(8);
-// led.enable(false);
-apds9960.Init(11.12)
-apds9960.ColorMode()
+apds9960.Init(11.12);
+apds9960.ColorMode();
 let NUM_LEDS = 8;
 let strip = neopixel.create(PIN_NEOPIXEL, NUM_LEDS, NeoPixelMode.RGB);
 
