@@ -1,5 +1,6 @@
 // GROUP MB-C
 // color C3, neopixel N3
+// radio from MB-A
 // radio to MB-B
 
 // PINOUT
