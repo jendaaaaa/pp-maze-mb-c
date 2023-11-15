@@ -7,7 +7,7 @@ let PIN_NEOPIXEL = DigitalPin.P0;
 
 // INIT
 radio.setGroup(8);
-led.enable(false);
+// led.enable(false);
 apds9960.Init(11.12)
 apds9960.ColorMode()
 let NUM_LEDS = 8;
@@ -21,9 +21,9 @@ let COL_ORANGE = 0;
 let COL_YELLOW = 20;
 let COL_NO_COLOR = 60;
 let COL_EMPTY = -1000;
+let ARR_COL = [COL_BLUE, COL_PINK, COL_GREEN, COL_YELLOW];
 let ERROR = 10;
 let LIGHT_TRESHOLD = 300;
-let ARR_COL = [COL_BLUE, COL_PINK, COL_GREEN, COL_YELLOW];
 
 // VARIABLES
 let colorCorrect = COL_EMPTY;
@@ -34,7 +34,7 @@ let isCorrect = false;
 
 let RADIO_RESET = 1;
 let RADIO_CLOSE = 2;
-let RADIO_GET_COLOR = "getColor";
+let RADIO_COLOR_NAME = "COLOR3";
 
 // INTERRUPT
 radio.onReceivedNumber(function (receivedNumber) {
@@ -44,8 +44,9 @@ radio.onReceivedNumber(function (receivedNumber) {
 })
 
 radio.onReceivedValue(function(name: string, value: number) {
-    if(name === RADIO_GET_COLOR){
+    if(name === RADIO_COLOR_NAME){
         colorCorrect = value;
+        basic.showNumber(value);
     }
 })
 
@@ -53,12 +54,12 @@ radio.onReceivedValue(function(name: string, value: number) {
 basic.forever(function () {
     if (apds9960.Data_Ready()) {
         colorMeasured = apds9960.ReadColor();
-        strip.showColor(colorNeopixel);
+        ambientMeasured = apds9960.Read_Ambient();
     } else {
         //
     }
     if (ambientMeasured <= LIGHT_TRESHOLD) {
-        colorNeopixel = neopixel.rgb(0, 0, 0);
+        colorNeopixel = NeoPixelColors.White;
     } else {
         // neopixel
         if (colorMeasured <= COL_GREEN + ERROR && colorMeasured >= COL_GREEN - ERROR) {
@@ -72,14 +73,14 @@ basic.forever(function () {
         } else if (colorMeasured <= COL_PINK + ERROR && colorMeasured >= COL_PINK - ERROR) {
             colorNeopixel = neopixel.rgb(255, 0, 59);
         } else {
-            colorNeopixel = neopixel.rgb(0, 0, 0);
+            colorNeopixel = NeoPixelColors.White;
         }
-        // check if correct
-        if (colorMeasured <= colorCorrect + ERROR && colorMeasured >= colorCorrect - ERROR){
-            isCorrect = true;
-        } else {
-            isCorrect = false;
-        }
+    }
+    // check if correct
+    if (colorMeasured <= colorCorrect + ERROR && colorMeasured >= colorCorrect - ERROR){
+        isCorrect = true;
+    } else {
+        isCorrect = false;
     }
     strip.showColor(colorNeopixel);
     pause(100);
@@ -91,7 +92,7 @@ basic.forever(function() {
     } else {
         radio.sendValue("C3", 0);
     }
-    pause(123);
+    // pause(123);
 })
 
 // FUNCTIONS
