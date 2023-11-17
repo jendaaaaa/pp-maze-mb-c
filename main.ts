@@ -23,8 +23,8 @@ let COL_YELLOW = 20;
 let COL_NO_COLOR = 60;
 let COL_EMPTY = -1000;
 let ARR_COL = [COL_BLUE, COL_PINK, COL_GREEN, COL_YELLOW];
-let ERROR = 20;
-let LIGHT_TRESHOLD = 300;
+let ERROR = 10;
+let LIGHT_TRESHOLD = 600;
 
 // VARIABLES
 let colorCorrect = COL_EMPTY;
@@ -47,7 +47,7 @@ radio.onReceivedNumber(function (receivedNumber) {
 radio.onReceivedValue(function(name: string, value: number) {
     if(name === RADIO_COLOR_NAME){
         colorCorrect = value;
-        basic.showNumber(value);
+        // basic.showNumber(value);
     }
 })
 
