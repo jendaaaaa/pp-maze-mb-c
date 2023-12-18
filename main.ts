@@ -15,14 +15,16 @@ let NUM_LEDS = 8;
 let strip = neopixel.create(PIN_NEOPIXEL, NUM_LEDS, NeoPixelMode.RGB);
 
 // COLORS
+let COL_WHITE = 256;
 let COL_BLUE = 216;
-let COL_PINK = -14;
 let COL_GREEN = 150;
 let COL_YELLOW = 20;
 // let COL_ORANGE = 0;
+let COL_PINK = -14;
 let COL_NO_COLOR = 60;
 let COL_EMPTY = -1000;
-let ARR_COL = [COL_BLUE, COL_PINK, COL_GREEN, COL_YELLOW];
+let ARR_COL = [COL_BLUE, COL_GREEN, COL_YELLOW, COL_PINK];
+let NUM_COLORS = ARR_COL.length;
 let ERROR = 20;
 let LIGHT_TRESHOLD = 1200;
 
@@ -76,12 +78,12 @@ basic.forever(function () {
         } else {
             colorNeopixel = NeoPixelColors.White;
         }
-    }
-    // check if correct
-    if (colorMeasured <= colorCorrect + ERROR && colorMeasured >= colorCorrect - ERROR){
-        isCorrect = true;
-    } else {
-        isCorrect = false;
+        // check if correct
+        if (colorMeasured <= colorCorrect + ERROR && colorMeasured >= colorCorrect - ERROR) {
+            isCorrect = true;
+        } else {
+            isCorrect = false;
+        }
     }
     strip.showColor(colorNeopixel);
     pause(100);
