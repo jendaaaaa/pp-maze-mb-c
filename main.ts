@@ -3,6 +3,8 @@
 // radio from MB-A
 // radio to MB-B
 
+// LAST UPDATE 12/18
+
 // PINOUT
 let PIN_NEOPIXEL = DigitalPin.P1;
 
