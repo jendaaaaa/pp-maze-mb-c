@@ -28,6 +28,13 @@ let NUM_COLORS = ARR_COL.length;
 let ERROR = 20;
 let LIGHT_TRESHOLD = 1200;
 
+// NEOPIXEL COLORS
+let NEO_BLUE = neopixel.rgb(0, 203, 255);
+let NEO_GREEN = neopixel.rgb(28, 238, 0);
+let NEO_YELLOW = neopixel.rgb(255, 130, 0);
+let NEO_PINK = neopixel.rgb(255, 0, 59);
+let NEO_ORANGE = neopixel.rgb(255, 34, 0);
+
 // VARIABLES
 let colorCorrect = COL_EMPTY;
 let colorMeasured = COL_NO_COLOR;
@@ -63,39 +70,29 @@ basic.forever(function () {
     }
     if (ambientMeasured <= LIGHT_TRESHOLD) {
         colorNeopixel = NeoPixelColors.White;
+        isCorrect = false;
     } else {
-        // neopixel
-        if (colorMeasured <= COL_GREEN + ERROR && colorMeasured >= COL_GREEN - ERROR) {
-            colorNeopixel = neopixel.rgb(28, 238, 0);
-        } else if (colorMeasured <= COL_BLUE + ERROR && colorMeasured >= COL_BLUE - ERROR) {
-            colorNeopixel = neopixel.rgb(0, 203, 255);
-        // } else if (colorMeasured <= COL_ORANGE + ERROR && colorMeasured >= COL_ORANGE - ERROR) {
-        //     colorNeopixel = neopixel.rgb(255, 34, 0);
-        } else if (colorMeasured <= COL_YELLOW + ERROR && colorMeasured >= COL_YELLOW - ERROR) {
-            colorNeopixel = neopixel.rgb(255, 130, 0);
-        } else if (colorMeasured <= COL_PINK + ERROR && colorMeasured >= COL_PINK - ERROR) {
-            colorNeopixel = neopixel.rgb(255, 0, 59);
-        } else {
-            colorNeopixel = NeoPixelColors.White;
-        }
         // check if correct
         if (colorMeasured <= colorCorrect + ERROR && colorMeasured >= colorCorrect - ERROR) {
             isCorrect = true;
         } else {
             isCorrect = false;
         }
+        // neopixel
+        if (colorMeasured <= COL_GREEN + ERROR && colorMeasured >= COL_GREEN - ERROR) {
+            colorNeopixel = NEO_GREEN;
+        } else if (colorMeasured <= COL_BLUE + ERROR && colorMeasured >= COL_BLUE - ERROR) {
+            colorNeopixel = NEO_BLUE;
+        } else if (colorMeasured <= COL_YELLOW + ERROR && colorMeasured >= COL_YELLOW - ERROR) {
+            colorNeopixel = NEO_YELLOW;
+        } else if (colorMeasured <= COL_PINK + ERROR && colorMeasured >= COL_PINK - ERROR) {
+            colorNeopixel = NEO_PINK;
+        } else {
+            colorNeopixel = NeoPixelColors.White;
+        }
     }
     strip.showColor(colorNeopixel);
     pause(100);
-})
-
-basic.forever(function() {
-    if (isCorrect){
-        radio.sendValue("C3", 1);
-    } else {
-        radio.sendValue("C3", 0);
-    }
-    pause(123);
 })
 
 // FUNCTIONS
