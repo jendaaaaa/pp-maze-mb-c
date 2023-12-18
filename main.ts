@@ -97,6 +97,15 @@ basic.forever(function () {
     pause(100);
 })
 
+basic.forever(function () {
+    if (isCorrect) {
+        radio.sendValue("C3", 1);
+    } else {
+        radio.sendValue("C3", 0);
+    }
+    pause(123);
+})
+
 // FUNCTIONS
 function resetState() {
     //
