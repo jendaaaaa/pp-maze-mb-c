@@ -3,13 +3,38 @@
 // radio from MB-A
 // radio to MB-B
 
-// LAST UPDATE 12/18
+// LAST UPDATE 01/10/24
 
 // PINOUT
 let PIN_NEOPIXEL = DigitalPin.P1;
 
+//////////////////////////////////////////////
+//// BEGIN ULTRASONIC
+
+// PINOUT
+let PIN_US_NEOPIXEL = DigitalPin.P1;
+let PIN_US_TRIG = DigitalPin.P8;
+let PIN_US_ECHO = DigitalPin.P9;
+
+// NEOPIXEL
+let NUM_US_LEDS = 20;
+let strip_US = neopixel.create(PIN_US_NEOPIXEL, NUM_US_LEDS, NeoPixelMode.RGB);
+
+// CONSTANTS
+let COLOR_US = NeoPixelColors.Red;
+let DIST_US_LIM = 400
+let DIST_US_MAX = 70;
+let DIST_US_MIN = 25;
+let distanceMeasured = 0;
+let distanceFiltered = 0;
+let leds = 0;
+let alpha = 0.3;
+
+//// END ULTRASONIC
+//////////////////////////////////////////////
+
 // INIT
-radio.setGroup(8);
+radio.setGroup(9);
 basic.showString("C");
 apds9960.Init(11.12);
 apds9960.ColorMode();
@@ -28,7 +53,7 @@ let COL_EMPTY = -1000;
 let ARR_COL = [COL_BLUE, COL_GREEN, COL_YELLOW, COL_PINK];
 let NUM_COLORS = ARR_COL.length;
 let ERROR = 20;
-let LIGHT_TRESHOLD = 1200;
+let LIGHT_TRESHOLD = 1000;
 
 // NEOPIXEL COLORS
 let NEO_BLUE = neopixel.rgb(0, 203, 255);
@@ -58,7 +83,6 @@ radio.onReceivedNumber(function (receivedNumber) {
 radio.onReceivedValue(function(name: string, value: number) {
     if(name === RADIO_COLOR_NAME){
         colorCorrect = value;
-        // basic.showNumber(value);
     }
 })
 
@@ -67,8 +91,6 @@ basic.forever(function () {
     if (apds9960.Data_Ready()) {
         colorMeasured = apds9960.ReadColor();
         ambientMeasured = apds9960.Read_Ambient();
-    } else {
-        //
     }
     if (ambientMeasured <= LIGHT_TRESHOLD) {
         colorNeopixel = NeoPixelColors.White;
@@ -110,3 +132,28 @@ basic.forever(function () {
 function resetState() {
     //
 }
+
+//////////////////////////////////////////////
+//// BEGIN ULTRASONIC
+
+// get distance and num of leds
+basic.forever(function () {
+    distanceMeasured = sonar.ping(PIN_US_TRIG, PIN_US_ECHO, PingUnit.Centimeters, DIST_US_LIM);
+    distanceFiltered = alpha*distanceMeasured + (1 - alpha)*distanceFiltered;
+    leds = Math.floor(Math.map(distanceFiltered, DIST_US_MIN, DIST_US_MAX, 0, NUM_US_LEDS));
+})
+
+// turn on num of leds
+basic.forever(function () {
+    for (let i = 0; i < NUM_US_LEDS; i++) {
+        if (i < leds) {
+            strip_US.setPixelColor(i, COLOR_US);
+        } else {
+            strip_US.setPixelColor(i, NeoPixelColors.Black);
+        }
+    }
+    strip_US.show()
+})
+
+//// END ULTRASONIC
+//////////////////////////////////////////////
