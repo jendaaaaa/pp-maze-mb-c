@@ -12,9 +12,10 @@ let PIN_NEOPIXEL = DigitalPin.P1;
 //// BEGIN ULTRASONIC
 
 // PINOUT
-let PIN_US_NEOPIXEL = DigitalPin.P1;
+let PIN_US_NEOPIXEL = DigitalPin.P0;
 let PIN_US_TRIG = DigitalPin.P8;
 let PIN_US_ECHO = DigitalPin.P9;
+// front face: VCC, TRIG, ECHO, GND (red, yellow, orange, brown)
 
 // NEOPIXEL
 let NUM_US_LEDS = 20;
